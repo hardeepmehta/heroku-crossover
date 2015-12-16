@@ -1,0 +1,14 @@
+<div style="overflow: hidden;" ng-show="!loginLoading" ui-view>
+  <div class="center-middle w-xxl raleway h-xl text-white hover-change">
+
+  </div>
+</div>
+
+<div ng-if="loginLoading" class="w-full center-middle">
+  <div data-ng-include="'tpl/loader.html'" >
+  </div>
+</div>
+
+<!-- toaster directive -->
+<toaster-container toaster-options="{'position-class': 'toast-bottom-left', 'time-out': 3000}"></toaster-container>
+<!-- / toaster directive -->

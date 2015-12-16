@@ -1,0 +1,468 @@
+<div>
+    <div>
+        <div style="background-color: #f6f8f8" class="panel-heading">
+
+            <div class="consent-header i-b">
+                <a class="every-page-header block">
+                    <span>
+                        All Test Cases
+                    </span>
+                    <span class="pull-right">
+                        <button class="btn btn-danger" ng-click="randomTestCase()">Add Random Test Case</button>
+                    </span>
+                </a>
+            </div>
+
+        </div>
+
+        <div ng-show="testCases.length == 0">
+            <span class="fa fa-spin fa-refresh center-middle"></span>
+        </div>
+
+        <div class="" ng-show="testCases.length > 0">
+
+            <div class="table table-responsive table-hover crossover-table">
+                <table class="table table-striped b-t b-light">
+                    <thead>
+                    <tr class="status over-border">
+                        <th class="left-border">
+                            Changelist
+                        </th>
+                        <th>Owner</th>
+                        <th>Time Started</th>
+                        <th>
+                            <span class="pull-left">
+                                Build
+                            </span>
+
+                            <span>
+                                Unit Test
+                            </span>
+
+                            <span style="position: relative; right: 20px;" class="pull-right">
+                                Functional Test
+                            </span>
+
+                            </th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-click="openTest()" ng-repeat="test in testCases | orderBy: 'date':true" ng-class="{ 'open': test.opened }" class="status {{ test.status }}-border">
+                        <td class="left-border {{ test.opened ? ( test.status+'-top-border' ):'' }}">
+                            <div>{{test.id}}</div>
+
+                            <div ng-class="{ 'build-success': ( test.buildTest.status === 'passed' ), 'build-failed': ( test.buildTest.status === 'failed' ) }" class="on-open b-t">
+                                <div class="failed">
+                                    <div>
+                                        <span>Build</span>
+                                        <span class="fa fa-close"></span>
+                                    </div>
+                                </div>
+                                <div class="success">
+                                    <div>
+                                        <span>Build</span>
+                                        <span class="fa fa-check-square"></span>
+                                    </div>
+                                </div>
+                                <div class="clock">
+                                    <span>
+                                       <i class="fa fa-clock-o"></i>
+                                    </span>
+                                    <span>
+                                       {{test.buildTest.buildTime | amDateFormat:'hh:mm a'}}
+                                    </span>
+                                </div>
+                            </div>
+
+                        </td>
+
+
+
+                        <td class="{{ test.opened ? ( test.status+'-top-border' ):'' }}">
+                            <div>{{ test.owner }}</div>
+
+                            <!-- folder-success  means processing has finished -->
+                            <!-- folder-failed  means processing has not yet finished and shows a loading sign -->
+                            <div style="padding-left: 27px;" ng-class="{ 'folder-success': ( test.buildTest.status == 'passed' || test.buildTest.status == 'failed' ), 'folder-failed': ( ( test.buildTest.status != 'passed' && test.buildTest.status != 'failed' ) ) }" class="on-open b-t pos-rlt">
+                                <div class="success">
+                                    <div class="pull-left">
+                                        <div style="position: relative; left: -14px; top: -1px;" class="pull-left">
+                                            <div>
+                                                <span ng-class="{ 'green': ( test.buildTest.debug ), 'red': ( !test.buildTest.debug ) }" class="fa fa-folder-open-o folder"></span>
+                                            </div>
+                                            <div class="sub-statement blue text-underline cursor-pointer">
+                                                debug
+                                            </div>
+                                        </div>
+                                        <div class="pull-left">
+                                            <div>
+                                                <span ng-class="{ 'green': ( test.buildTest.release ), 'red': ( !test.buildTest.release ) }" class="fa fa-folder-open-o folder"></span>
+                                            </div>
+                                            <div class="sub-statement">
+                                                release
+                                            </div>
+                                            <div class="sub-sub-statement blue text-underline cursor-pointer">
+                                                <span style="position: relative; top: 2px;" class="fa fa-download"></span>
+                                                <span>get logs</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="failed">
+                                    <div class="pull-left">
+                                        <span style="position: relative; top: 14px;" class="fa fa-spin fa-refresh orange"></span>
+                                    </div>
+                                </div>
+
+                                <div class="right-arrow">
+                                    <span class="fa fa-angle-right"></span>
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+
+                        <td class="{{ test.opened ? ( test.status+'-top-border' ):'' }}">
+                            <div>
+                                <span>
+                                    {{test.date | amDateFormat:'MM/DD/YYYY'}}
+                               </span>
+                                <span class="m-l-xs">
+                                    <i class="fa fa-clock-o">
+                                    </i>
+                                </span>
+                                <span>
+                                    {{test.date | amDateFormat:'hh:mm a'}}
+                                </span>
+                            </div>
+
+                            <div ng-class="{ 'unit-test-success': test.unitTest.status === 'passed', 'unit-test-failed': test.unitTest.status != 'passed'  }" class="on-open b-t pos-rlt">
+                                <div ng-if="test.unitTest.status === 'passed'" class="success">
+
+                                    <div class="pull-left">
+                                        <div>
+                                            <span class="grey">Unit Test</span>
+                                            <span class="fa fa-check-square green"></span>
+                                        </div>
+                                        <div style="font-size: 26px;" class="text-left green">
+                                            {{test.unitTest.completedPercentage}}%
+                                        </div>
+                                    </div>
+
+                                    <div class="pull-right">
+                                        <div class="pull-left" style="width: 130px; position: relative; top: -5px; left: 10px;">
+                                            <canvas id="pie" class="chart chart-pie"
+                                            chart-data="[test.unitTest.completedPercentage, 100 - test.unitTest.completedPercentage ]" chart-labels="['cleared %','uncleared %']" chart-colours="['#1AB393','#F7AB58']" chart-options="{ animation: false, showTooltips: false }">
+                                            </canvas>
+                                        </div>
+                                        <div style="font-size: 11px;" class="pull-right">
+                                            <div class="text-left">
+                                                <span class="fa fa-square green"></span>
+                                                <span class="m-l-xs">{{test.unitTest.completedTasks}}</span>
+                                            </div>
+
+                                            <div class="text-left">
+                                                <span class="fa fa-square orange"></span>
+                                                <span class="m-l-xs">{{test.unitTest.uncompletedTasks}}</span>
+                                            </div>
+
+                                            <div class="text-left grey">
+                                                <span class="fa fa-clock-o"></span>
+                                                <span class="m-l-xs">{{test.unitTest.timeTaken}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div style="position: relative; left: 45px;" class="failed">
+                                    <div style="font-size: 18px; position: relative; left: 6px;">
+                                        <span class="grey">
+                                            Unit Test
+                                        </span>
+                                        <span>
+                                            <i class="fa fa-minus-circle red">
+                                            </i>
+                                        </span>
+                                    </div>
+                                    <div style="position: relative; left: 60px;">
+                                        <span class="percentage"><b>{{test.unitTest.completedPercentage}}%</b></span>
+                                        <span class="m-l-xs">Status: </span>
+                                        <span class="explanation explanation-{{test.unitTest.status}}">{{test.unitTest.status}}</span>
+                                    </div>
+                                </div>
+
+                                <div class="right-arrow-2">
+                                    <span class="fa fa-angle-right"></span>
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+
+                        <td class="test text-center {{ test.opened ? ( test.status+'-top-border' ):'' }}">
+                            <div>
+                                <div class="pos-rlt pull-left">
+                                    <div class="round-icon left">
+                                        <div class="pending-show {{ test.buildTest.status === 'pending' ? 'show':'hide' }}">
+                                            <span class="pending text-white">
+                                                <i class="circle fa fa-circle-o"></i>
+                                                <i class="ellipsis fa fa-ellipsis-h"></i>
+                                            </span>
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                        <div class="running-show {{ test.buildTest.status === 'running' ? 'show':'hide' }}">
+                                        <span class="running">
+                                            <i class="fa fa-spin fa-refresh text-white"></i>
+                                        </span>
+
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                        <div ng-class="{ 'failed': (test.status === 'failed') && ( test.buildTest.status === 'passed' ) }" class="passed-show {{ test.buildTest.status === 'passed' ? 'show':'hide' }}">
+                                        <span class="passed">
+                                            <i class="fa fa-check text-white"></i>
+                                        </span>
+
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                        <div class="failure-show {{ test.buildTest.status === 'failed' ? 'show':'hide' }}">
+                                         <span class="failure">
+                                            <i class="fa fa-exclamation text-white"></i>
+                                        </span>
+
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="left-progress">
+                                        <uib-progressbar type="{{ (test.status === 'failed') && ( test.buildTest.status === 'passed' ) ? 'failure':'passed' }}" max="100" value="test.buildTest.percentage">
+                                        </uib-progressbar>
+                                    </div>
+                                </div>
+
+                                <div style="left: -13px;" class="pos-rlt inline pull-left">
+                                    <div class="round-icon left">
+                                        <div class="pending-show {{ test.unitTest.status === 'pending' ? 'show':'hide' }}">
+                                            <span class="pending text-white">
+                                                <i class="circle fa fa-circle-o"></i>
+                                                <i class="ellipsis fa fa-ellipsis-h"></i>
+                                            </span>
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                        <div class="running-show {{ test.unitTest.status === 'running' ? 'show':'hide' }}">
+                                        <span class="running">
+                                            <i class="fa fa-spin fa-refresh text-white"></i>
+                                        </span>
+
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                        <div ng-class="{ 'failed': (test.status === 'failed') && ( test.unitTest.status === 'passed' ) }" class="passed-show {{ test.unitTest.status === 'passed' ? 'show':'hide' }}">
+                                        <span class="passed">
+                                            <i class="fa fa-check text-white"></i>
+                                        </span>
+
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                        <div class="failure-show {{ test.unitTest.status === 'failed' ? 'show':'hide' }}">
+                                         <span class="failure">
+                                            <i class="fa fa-exclamation text-white"></i>
+                                        </span>
+
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="left-progress">
+                                        <uib-progressbar type="{{ (test.status === 'failed') && ( test.unitTest.status === 'passed' ) ? 'failure':'passed' }}" max="100" value="test.unitTest.percentage">
+                                        </uib-progressbar>
+                                    </div>
+                                </div>
+
+                                <div style="left: -26px;" class="pull-left inline pos-rlt">
+                                    <div class="round-icon left">
+                                        <div class="pending-show {{ test.functionalTest.status === 'pending' ? 'show':'hide' }}">
+                                            <span class="pending text-white">
+                                                <i class="circle fa fa-circle-o"></i>
+                                                <i class="ellipsis fa fa-ellipsis-h"></i>
+                                            </span>
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                        <div class="running-show {{ test.functionalTest.status === 'running' ? 'show':'hide' }}">
+                                        <span class="running">
+                                            <i class="fa fa-spin fa-refresh text-white"></i>
+                                        </span>
+
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                        <div ng-class="{ 'failed': (test.functionalTest === 'failed') && ( test.functionalTest.status === 'passed' ) }" class="passed-show {{ test.functionalTest.status === 'passed' ? 'show':'hide' }}">
+                                        <span class="passed">
+                                            <i class="fa fa-check text-white"></i>
+                                        </span>
+
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                        <div class="failure-show {{ test.functionalTest.status === 'failed' ? 'show':'hide' }}">
+                                         <span class="failure">
+                                            <i class="fa fa-exclamation text-white"></i>
+                                        </span>
+
+                                            <div class="back-icon">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div ng-class="{ 'functional-test-success': test.functionalTest.status === 'passed', 'functional-test-failed': test.functionalTest.status != 'passed'  }" style="margin-top: 40px;" class="on-open b-t pos-rlt">
+                                <div ng-if="test.functionalTest.status === 'passed'" style="padding-left: 250px" class="success">
+
+                                    <div class="pull-left">
+                                        <div>
+                                            <span class="grey">Functional Test</span>
+                                            <span class="fa fa-check-square green"></span>
+                                        </div>
+                                        <div style="font-size: 26px;" class="text-left green">
+                                            {{test.functionalTest.completedPercentage}}%
+                                        </div>
+                                    </div>
+
+                                    <div style="position: relative; left: -12px; top: 3px;" class="pull-right">
+                                        <div class="pull-left" style="width: 130px; position: relative; top: -5px; left: 10px;">
+                                            <canvas id="pie" class="chart chart-pie"
+                                                    chart-data="[ test.functionalTest.completedPercentage, 100 - test.functionalTest.completedPercentage ]" chart-labels="['cleared %','uncleared %']" chart-colours="['#1AB393','#F7AB58']" chart-options="{ animation: false, showTooltips: false }">
+                                            </canvas>
+                                        </div>
+                                        <div style="font-size: 11px;" class="pull-right">
+                                            <div class="text-left">
+                                                <span class="fa fa-square green"></span>
+                                                <span class="m-l-xs">{{test.functionalTest.completedTasks}}</span>
+                                            </div>
+
+                                            <div class="text-left">
+                                                <span class="fa fa-square orange"></span>
+                                                <span class="m-l-xs">{{test.functionalTest.uncompletedTasks}}</span>
+                                            </div>
+
+                                            <div class="text-left grey">
+                                                <span class="fa fa-clock-o"></span>
+                                                <span class="m-l-xs">{{test.functionalTest.timeTaken}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="failed">
+                                    <div>
+                                        <span class="grey">
+                                            Functional Test
+                                        </span>
+                                        <span>
+                                            <i class="fa fa-minus-circle red">
+                                            </i>
+                                        </span>
+                                    </div>
+                                    <div style="position: relative; left: 33px;">
+                                        <span class="percentage"><b>{{test.functionalTest.completedPercentage}}%</b></span>
+                                        <span class="m-l-xs">Status: </span>
+                                        <span class="explanation explanation-{{test.functionalTest.status}}">{{test.functionalTest.status}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+
+
+
+                        <td class="status b-l">
+                            <div class="close-open">
+                                <div class="pending-status-show {{ test.status === 'pending' ? 'show':'hide' }}">
+                                    <span class="pending">
+                                        <i class="circle fa fa-circle-o"></i>
+                                        <i class="ellipsis fa fa-ellipsis-h"></i>
+                                    </span>
+                                    <span>Pending</span>
+                                </div>
+
+                                <div class="running-status-show {{ test.status === 'running' ? 'show':'hide' }}">
+                                    <span class="running">
+                                        <i class="fa fa-spin fa-refresh"></i>
+                                    </span>
+                                    <span>Running</span>
+                                </div>
+
+                                <div class="passed-status-show {{ test.status === 'passed' ? 'show':'hide' }}">
+                                    <span class="passed">
+                                        <i class="fa fa-check-circle-o"></i>
+                                    </span>
+                                    <span>Passed</span>
+                                </div>
+
+                                <div class="failed-status-show {{ test.status === 'failed' ? 'show':'hide' }}">
+                                    <span class="failed">
+                                        <i class="fa fa-close"></i>
+                                    </span>
+                                    <span>Failed</span>
+                                </div>
+                            </div>
+                            <div style="font-size: 22px;" class="on-open pos-rlt">
+                                <div class="pending-status-show {{ test.status === 'pending' ? 'show':'hide' }}">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                    <span>Pending</span>
+                                </div>
+
+                                <div class="running-status-show {{ test.status === 'running' ? 'show':'hide' }}">
+                                    <i class="fa fa-spin fa-refresh"></i>
+                                    <span>Running</span>
+                                </div>
+
+                                <div class="passed-status-show {{ test.status === 'passed' ? 'show':'hide' }}">
+                                    <i class="fa fa-check-circle-o"></i>
+                                    <span>Passed</span>
+                                </div>
+
+                                <div class="failed-status-show {{ test.status === 'failed' ? 'show':'hide' }}">
+                                    <i class="fa fa-close"></i>
+                                    <span>Build Failure</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>

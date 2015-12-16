@@ -1,0 +1,33 @@
+<div class="aside-wrap">
+  <!-- if you want to use a custom scroll when aside fixed, use the slimScroll
+    <div class="navi-wrap" ui-jq="slimScroll" ui-options="{height:'100%', size:'8px'}">
+  -->
+  <div class="navi-wrap">
+    <!-- user -->
+    <div class="clearfix hidden-xs text-center" id="aside-user">
+      <div class="dropdown wrapper">
+        <a ui-sref="type.student.settings">
+          <span class="thumb-lg w-auto-folded avatar m-t-sm">
+            <img ng-src="../img/agents/agent.png" class="img-full" alt="Agent-Picture">
+          </span>
+        </a>
+
+      </div>
+      <div style="background-color: #ffffff" class="line hidden-folded"></div>
+    </div>
+    <!-- / user -->
+
+    <!-- nav -->
+    <nav ui-nav class="navi museo-4" ng-include="'tpl/blocks/team/nav-team.html'"></nav>
+    <!-- nav -->
+
+    <!--Footer-->
+    <div class="wrapper m-t hidden-xs" style="position: absolute; bottom: 0;">
+      <div class="text-center-folded hardeep-logo">
+        <img width="50px" src="img/logo/short.png" alt="Headmaster">
+        <span style="top: 3px; font-size: 13px; left: -11px;" class="hidden-folded pull-right pos-rlt">Copyright &copy; 2015</span>
+      </div>
+    </div>
+    <!--Footer-->
+  </div>
+</div>
