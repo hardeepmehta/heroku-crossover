@@ -4,7 +4,11 @@
   "description": "An application intended for crossover's Senior Front End Development Position",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "start": "node app.js"
+=======
+    "test": "echo \"Error: no test specified\" && exit 1"
+>>>>>>> 2a5a7c54a172ce192f47e9725c030a924dacd300
   },
   "author": "",
   "license": "ISC",
