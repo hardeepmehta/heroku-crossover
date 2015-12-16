@@ -1,0 +1,28 @@
+<ul id="dash" class="navbar-nav nav nav-pages padder m-none-xs">
+    <li uib-dropdown class="pos-rlt top-dash">
+        <a id="single-button" uib-dropdown-toggle class="clear">
+                  <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                    <img ng-src="../img/agents/agent.png" alt="profile-photo">
+                  </span>
+            <span class="top-dash-name">Hardeep Mehta</span> <b class="caret top-dash-name"></b>
+        </a>
+        <!-- dropdown -->
+        <ul aria-labelledby="single-button" class="dropdown-menu w-full">
+            <li ng-class="{active:$state.includes('main.dash.tests')}">
+                <a ui-sref="main.dash.tests.all">
+                    <span class="fa fa-home m-r-xs"></span>
+                    <span>All Tests</span>
+                </a>
+            </li>
+
+            <li class="divider"></li>
+            <li>
+                <a>
+                    <span class="icon-logout m-r-xs"></span>
+                    <span>Menu #2</span>
+                </a>
+            </li>
+        </ul>
+        <!-- / dropdown -->
+    </li>
+</ul>

@@ -1,0 +1,26 @@
+{
+  "name": "sfd-crossover",
+  "description": "An application intended for crossover's Senior Front End Development Position",
+  "main": "index.js",
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "components-font-awesome": "~4.5.0",
+    "animate.css": "~3.4.0",
+    "simple-line-icons": "~2.2.3",
+    "angular": "~1.4.8",
+    "moment": "~2.10.6",
+    "angular-moment": "~0.10.3",
+    "angular-route": "~1.4.8",
+    "angular-animate": "~1.4.8",
+    "angular-touch": "~1.4.8",
+    "angular-ui-router": "~0.2.15",
+    "angular-bootstrap": "~0.14.3",
+    "AngularJS-Toaster": "angularjs-toaster#~0.4.181",
+    "angular-chart.js": "~0.8.8",
+    "Chart.js": "~1.0.2",
+    "screenfull": "~3.0.0"
+  }
+}
